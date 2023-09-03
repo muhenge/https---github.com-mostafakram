@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+use App\Models\Comment;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -33,7 +33,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
+    /**\DB::select('show tables');
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -42,4 +42,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function Lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
+
 }

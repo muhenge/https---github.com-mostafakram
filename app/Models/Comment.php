@@ -10,6 +10,12 @@ class Comment extends Model
 {
     use HasFactory;
 
+    const FIRST_COMMENT = 'First Comment Written';
+    const THREE_COMMENTS = '3 Comments Written';
+    const FIVE_COMMENTS = '5 Comments Written';
+    const TEN_COMMENTS = '10 Comments Written';
+    const TWENTY_COMMENTS = '20 comments Written';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -27,4 +33,5 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
 }
