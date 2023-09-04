@@ -11,9 +11,10 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Events\BadgeUnlokedEvent;
+use App\Events\LessonWatched;
 use App\Listeners\AchievementUnlockedListener;
 use App\Listeners\CommentWrittenListener;
-
+use App\Listeners\LessonWatchedListener;
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -34,6 +35,10 @@ class EventServiceProvider extends ServiceProvider
 
         CommentWritten::class => [
             CommentWrittenListener::class
+        ],
+
+        LessonWatched::class => [
+            LessonWatchedListener::class
         ]
     ];
 
