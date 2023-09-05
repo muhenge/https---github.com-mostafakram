@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
 use App\Models\Achievement;
+use Illuminate\Support\Carbon;
 
 class AchievementUnlockedListener
 {
@@ -44,6 +45,8 @@ class AchievementUnlockedListener
                 'unlocked_achievement' => $event->achievement_name,
                 'user_id' => $user->id,
                 'achievement_type' => $achievement_type,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }
