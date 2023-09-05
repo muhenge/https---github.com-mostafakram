@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlockedEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,6 @@ class AchievementUnlockedListener
 
         $user = $event->user;
         $achievement_type = $event->type;
-
         $existingAchievement = DB::table((new Achievement)->getTable())
             ->where('user_id', $user->id)
             ->where('achievement_type', $achievement_type)
@@ -39,6 +39,7 @@ class AchievementUnlockedListener
                 ->where('achievement_type', $achievement_type)
                 ->update([
                     'unlocked_achievement' => $event->achievement_name,
+
                 ]);
         } else {
             DB::table((new Achievement)->getTable())->insert([

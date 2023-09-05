@@ -11,6 +11,7 @@ use App\Models\LessonUser;
 use Illuminate\Support\Facades\DB;
 use App\Models\Achievement;
 use App\Helpers\NextAchievementService;
+use App\Events\BadgeUnlockedEvent;
 
 class AchievementsController extends Controller
 {
@@ -21,7 +22,6 @@ class AchievementsController extends Controller
 
         $comment = Comment::create(['body'=>'this the comment from the controller', 'user_id'=>$user->id]);
         event(new CommentWritten($comment));
-        //return $comment;
 
         $lesson = new Lesson();
         $lesson->title = 'this is the lesson';
@@ -60,12 +60,10 @@ class AchievementsController extends Controller
 
         $latest_comment = $getNextElements->getNextElementsFromArray($all_comments, $latestCommentWrittenAchievement->unlocked_achievement);
         $nextAchievements = [];
+        
 
         array_push($latest_comment, $nextAchievements);
-
         $latest_watch = $getNextElements->getNextElementsFromArray($all_watched, $latestLessonWatchedAchievement->unlocked_achievement);
-
-
         return response()->json([
             'unlocked_achievements' => $user_achievements,
             'next_available_achievements' => $latest_watch,
@@ -73,5 +71,8 @@ class AchievementsController extends Controller
             'next_badge' => '',
             'remaing_to_unlock_next_badge' => 0
         ]);
+
+
+
     }
 }
