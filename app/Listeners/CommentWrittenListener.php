@@ -29,7 +29,8 @@ class CommentWrittenListener
         $achievement = match (true) {
             $comments >= 20 => Comment::TWENTY_COMMENTS,
             $comments >= 10 => Comment::TEN_COMMENTS,
-            $comments >= 5 => Comment::THREE_COMMENTS,
+            $comments >= 5 => Comment::FIVE_COMMENTS,
+            $comments >= 3 => Comment::THREE_COMMENTS,
             $comments < 3 => Comment::FIRST_COMMENT,
         };
 

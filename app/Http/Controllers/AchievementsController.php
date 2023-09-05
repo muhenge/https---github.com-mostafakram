@@ -16,19 +16,26 @@ class AchievementsController extends Controller
 {
     public function index(User $user)
     {
-        $comment = Comment::create(['body'=>'this the comment from the controller', 'user_id'=>$user->id]);
-        event(new CommentWritten($comment));
+        //$comment = Comment::create(['body'=>'this the comment from the controller', 'user_id'=>$user->id]);
+        //event(new CommentWritten($comment));
         //return $comment;
-        // $lesson = new Lesson();
-        // $lesson->title = 'this is the lesson';
-        // $lesson->save();
+        $lesson = new Lesson();
+        $lesson->title = 'this is the lesson';
+        $lesson->save();
 
         $user_achievements = Achievement::where('user_id', $user->id);
 
 
-        // DB::table((new Lesson())->getTable())->insert(['title' => 'this is the test lesson']);
-        // DB::table((new LessonUser())->getTable())->insert(['lesson_id' => $lesson->id, 'user_id' => $user->id]);
-        // event(new LessonWatched($lesson, $user));
+        DB::table((new Lesson())->getTable())->insert(['title' => $lesson->title]);
+        $watched = DB::table((new LessonUser())->getTable())->insert(['lesson_id' => $lesson->id, 'user_id' => $user->id]);
+        if ($watched) {
+            DB::table((new LessonUser)->getTable())
+                ->update([
+                    'watched' => 'true',
+                ]);
+        }
+        event(new LessonWatched($lesson, $user));
+        
         return response()->json([
             'unlocked_achievements' => ['achievement' => $user_achievements],
             'next_available_achievements' => [],

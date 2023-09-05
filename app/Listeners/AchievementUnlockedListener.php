@@ -27,15 +27,24 @@ class AchievementUnlockedListener
         $user = $event->user;
         $achievement_type = $event->type;
 
-        DB::table((new Achievement)->getTable())
-        ->where('user_id', $user->id)
-        ->where('achievement_type', $achievement_type)
-        ->delete();
+        $existingAchievement = DB::table((new Achievement)->getTable())
+            ->where('user_id', $user->id)
+            ->where('achievement_type', $achievement_type)
+            ->first();
 
-        DB::table((new Achievement)->getTable())->insert([
-            'unlocked_achievement' => $event->achievement_name,
-            'user_id' => $user->id,
-            'achievement_type' => $event->type,
-        ]);
+        if ($existingAchievement) {
+            DB::table((new Achievement)->getTable())
+                ->where('user_id', $user->id)
+                ->where('achievement_type', $achievement_type)
+                ->update([
+                    'unlocked_achievement' => $event->achievement_name,
+                ]);
+        } else {
+            DB::table((new Achievement)->getTable())->insert([
+                'unlocked_achievement' => $event->achievement_name,
+                'user_id' => $user->id,
+                'achievement_type' => $achievement_type,
+            ]);
+        }
     }
 }
