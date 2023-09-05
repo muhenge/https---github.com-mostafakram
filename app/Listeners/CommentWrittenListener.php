@@ -34,7 +34,7 @@ class CommentWrittenListener
         };
 
         $user = User::find($event->comment->user_id);
-
-        event(new AchievementUnlocked($achievement, $user));
+        $achievementType = 'comment_written';
+        event(new AchievementUnlocked($achievement, $user, $achievementType));
     }
 }

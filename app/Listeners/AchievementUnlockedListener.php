@@ -23,10 +23,19 @@ class AchievementUnlockedListener
      */
     public function handle(AchievementUnlocked $event): void
     {
-       DB::table((new Achievement)->getTable())->insert([
-           'unlocked_achievement' => $event->achievement_name,
-           'user_id' => $event->user->id
-       ]
-       );
+
+        $user = $event->user;
+        $achievement_type = $event->type;
+
+        DB::table((new Achievement)->getTable())
+        ->where('user_id', $user->id)
+        ->where('achievement_type', $achievement_type)
+        ->delete();
+
+        DB::table((new Achievement)->getTable())->insert([
+            'unlocked_achievement' => $event->achievement_name,
+            'user_id' => $user->id,
+            'achievement_type' => $event->type,
+        ]);
     }
 }

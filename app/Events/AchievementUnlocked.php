@@ -18,12 +18,13 @@ class AchievementUnlocked
 
     public $achievement_name;
     public $user;
+    public $type;
 
 
-
-    public function __construct(string $achievement_name, User $user)
+    public function __construct(string $achievement_name, User $user, $type)
     {
         $this->achievement_name = $achievement_name;
         $this->user = $user;
+        $this->type = $type;
     }
 }

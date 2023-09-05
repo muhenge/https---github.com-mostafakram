@@ -24,7 +24,6 @@ class LessonWatchedListener
      */
     public function handle(LessonWatched $event): void
     {
-        $lesson = $event->lesson;
         $user = $event->user;
 
         $lessons = LessonUser::where('user_id', $user->id)->get()->count();
@@ -34,10 +33,9 @@ class LessonWatchedListener
             $lessons >= 20 => LessonUser::TWENTY_WATCHED,
             $lessons >= 10 => LessonUser::TEN__WATCHED,
             $lessons >= 5 => LessonUser::FIVE_WATCHED,
-            $lessons < 3 => LessonUser::FIRST_WATCHED
+            $lessons >= 3 => LessonUser::FIRST_WATCHED
         };
-
-        event(new AchievementUnlocked($watched, $user));
-
+        $achievementType= 'lesson_watched';
+        event(new AchievementUnlocked($watched, $user, $achievementType));
     }
 }
