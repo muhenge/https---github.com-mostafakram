@@ -30,9 +30,13 @@ class BadgeUnlokedListener
     {
         $user = $event->user;
         $badge_name = $event->badge_name;
+
+
+
+
         $user_achievements = Achievement::where('user_id', $user->id)->count();
         $user_achievements = $event->badge_name;
-
+        
         $badge = match (true) {
             $user_achievements >= 10 => 'Master',
             $user_achievements >= 8 => 'Advanced',
@@ -45,7 +49,7 @@ class BadgeUnlokedListener
 
         $found = $badge_init::findByBadgeNameAndUserId($badge_name, $user->id);
         if($found) {
-            if ($foude->name !== $badge_name) {
+            if ($found->name !== $badge_name) {
                 $found->update(['name' => $badge_name]);
             }
         } else {

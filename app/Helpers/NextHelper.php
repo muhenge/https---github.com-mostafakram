@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class NextAchievementService
+class NextHelper
 {
     public function getNextElementsFromArray($arr, $element)
     {
