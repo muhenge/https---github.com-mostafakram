@@ -39,7 +39,6 @@ class AchievementUnlockedListener
                 ->where('achievement_type', $achievement_type)
                 ->update([
                     'unlocked_achievement' => $event->achievement_name,
-
                 ]);
         } else {
             DB::table((new Achievement)->getTable())->insert([

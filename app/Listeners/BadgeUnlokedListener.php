@@ -29,7 +29,7 @@ class BadgeUnlokedListener
     public function handle(BadgeUnlockedEvent $event)
     {
         $user = $event->user;
-
+        $badge_name = $event->badge_name;
         $user_achievements = Achievement::where('user_id', $user->id)->count();
         $user_achievements = $event->badge_name;
 
@@ -40,26 +40,25 @@ class BadgeUnlokedListener
             $user_achievements <= 4 => 'Beginner'
         };
 
+        $badge_name = $badge;
+        $badge_init = new Badge();
 
-        $existing = DB::table((new Badge())->getTable())
-            ->where('user_id', $user->id)
-            ->where('name', $badge)
-            ->first();
-        if($existing) {
-            DB::table(new Badge())->getTable()
-            ->where('user_id', $user->id)
-            ->update([
-                'name' => $badge
-            ]);
+        $found = $badge_init::findByBadgeNameAndUserId($badge_name, $user->id);
+        if($found) {
+            if ($foude->name !== $badge_name) {
+                $found->update(['name' => $badge_name]);
+            }
         } else {
-            DB::table((new Badge())->getTable())->insert([
+            Badge::create([
                 'user_id' => $user->id,
-                'name' => $badge,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'name' => $badge_name,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 
-
+        Badge::where('user_id', $user->id)
+        ->where('name', '!=', $badge_name)
+        ->delete();
     }
 }

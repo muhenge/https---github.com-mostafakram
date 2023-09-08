@@ -11,6 +11,7 @@ class Badge extends Model
 
     protected $fillable = [
         'id',
+        'user_id',
         'name'
     ];
 
@@ -19,5 +20,12 @@ class Badge extends Model
 
 
         return $this->belongsTo(User::class);
+    }
+
+    public static function findByBadgeNameAndUserId($badge_name, $user_id)
+    {
+        return self::where('name', $badge_name)
+            ->where('user_id', $user_id)
+            ->first();
     }
 }

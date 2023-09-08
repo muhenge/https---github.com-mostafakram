@@ -19,5 +19,4 @@ class BadgeUnlockedEvent
         $this->badge_name = $badge_name;
         $this->user = $user;
     }
-
 }
