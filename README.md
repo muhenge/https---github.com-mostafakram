@@ -1,66 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+`git clone https://github.com/muhenge/https---github.com-mostafakram`
 
-## About Laravel
+Run
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+`composer install` in project directory
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Sample controller example
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+$comments = new Comment();
+        $lesson_user = new LessonUser();
 
-## Learning Laravel
+        $comment = Comment::create(['body'=>'this the comment from the controller', 'user_id'=>$user->id]);
+        event(new CommentWritten($comment));
+        $lesson = new Lesson();
+        $lesson->title = 'this is the lesson';
+        $lesson->save();
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+        $user_achievements = Achievement::where('user_id', $user->id)
+        ->pluck('unlocked_achievement');
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+        DB::table((new Lesson())->getTable())->insert(['title' => $lesson->title]);
+        $watched = DB::table((new LessonUser())->getTable())->insert(['lesson_id' => $lesson->id, 'user_id' => $user->id]);
+        if ($watched) {
+            DB::table((new LessonUser)->getTable())
+                ->update([
+                    'watched' => 'true',
+                ]);
+        }
+        event(new LessonWatched($lesson, $user));
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+        $all_comments = [$comments::FIRST_COMMENT, $comments::THREE_COMMENTS, $comments::FIVE_COMMENTS, $comments::TEN_COMMENTS, $comments::TWENTY_COMMENTS];
+        $all_watched = [$lesson_user::FIRST_WATCHED, $lesson_user::FIVE_WATCHED, $lesson_user::TEN__WATCHED, $lesson_user::TWENTY_WATCHED, $lesson_user::TWENTY_FIVE_WATCHED];
 
-### Premium Partners
+        $latestLessonWatchedAchievement = Achievement::where('achievement_type', 'lesson_watched')
+        ->where('user_id', $user->id)
+        ->orderBy('created_at', 'desc')
+        ->first();
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+        $latestCommentWrittenAchievement = Achievement::where('achievement_type', 'comment_written')
+        ->where('user_id', $user->id)
+        ->orderBy('created_at', 'desc')
+        ->first();
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+        $getNextElements = new NextHelper();
 
-## Code of Conduct
+        $nextBage = new NextBadgeHelper();
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+        $latest_comment = $getNextElements->getNextElementsFromArray($all_comments, $latestCommentWrittenAchievement->unlocked_achievement);
 
-## Security Vulnerabilities
+        $nextAchievements = [];
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+        array_push($latest_comment, $nextAchievements);
+        $latest_watch = $getNextElements->getNextElementsFromArray($all_watched, $latestLessonWatchedAchievement->unlocked_achievement);
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+        $badge = Badge::where('user_id', $user->id)->value('name');
+
+        $badges = ['Beginner', 'Intermediate', 'Advanced', 'Master'];
+
+        $remaining_badges = $getNextElements->getNextElementsFromArray($badges, $badge);
+
+        $next_badge = $nextBage->getNextElement($badges, $badge);
+
+
+        return response()->json([
+            'unlocked_achievements' => $user_achievements,
+            'next_available_achievements' => $latest_watch,
+            'current_badge' => $badge,
+            'next_badge' => $next_badge,
+            'remaining_to_unlock_next_badge' => $remaining_badges
+        ]);
+```
+
+### Steps
+
+* You can copy code below `app/Listeners/AchievementUnlockedListener.php` inside the index function for testing
+* Run the server after database configuration and migration.
+* Go to the browser run `localhost:8000/users/{user_id}/achievements` replace user_id by user id created or run `php artisan tinker` and run this 	`App\Models\User::factory()->count(25)->create();` this will generate 25 users and replace the id you want between 1 to 25
