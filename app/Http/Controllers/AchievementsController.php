@@ -81,7 +81,7 @@ class AchievementsController extends Controller
             'next_available_achievements' => $latest_watch,
             'current_badge' => $badge,
             'next_badge' => $next_badge,
-            'remaing_to_unlock_next_badge' => $remaining_badges
+            'remaining_to_unlock_next_badge' => $remaining_badges
         ]);
     }
 }
