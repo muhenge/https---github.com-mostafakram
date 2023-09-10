@@ -4,9 +4,6 @@ namespace App\Listeners;
 
 use App\Events\AchievementUnlocked;
 use App\Events\LessonWatched;
-use App\Models\Lesson;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Models\LessonUser;
 
 class LessonWatchedListener

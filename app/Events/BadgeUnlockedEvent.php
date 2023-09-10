@@ -14,7 +14,7 @@ class BadgeUnlockedEvent
     public $badge_name;
     public $user;
 
-    public function __construct(int $badge_name, User $user)
+    public function __construct(string $badge_name, User $user)
     {
         $this->badge_name = $badge_name;
         $this->user = $user;

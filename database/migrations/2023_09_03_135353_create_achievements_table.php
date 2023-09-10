@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('unlocked_achievement');
             $table->integer('user_id');
             $table->string('achievement_type');
+            $table->integer('counter');
             $table->timestamps();
         });
     }

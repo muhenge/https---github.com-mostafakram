@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\AchievementUnlocked;
 use App\Events\CommentWritten;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
 use App\Models\Comment;
 

@@ -2,15 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\AchievementUnlocked;
 use App\Events\BadgeUnlockedEvent;
 use App\Models\Achievement;
 use App\Models\Badge;
-use Faker\Provider\Base;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
+
 
 
 class BadgeUnlokedListener
@@ -31,17 +26,13 @@ class BadgeUnlokedListener
         $user = $event->user;
         $badge_name = $event->badge_name;
 
+        $user_achievement_count = Achievement::where('user_id', $user->id)->sum('counter');
 
-
-
-        $user_achievements = Achievement::where('user_id', $user->id)->count();
-        $user_achievements = $event->badge_name;
-        
         $badge = match (true) {
-            $user_achievements >= 10 => 'Master',
-            $user_achievements >= 8 => 'Advanced',
-            $user_achievements >= 4 => 'Intermediate',
-            $user_achievements <= 4 => 'Beginner'
+            $user_achievement_count >= 10 => 'Master',
+            $user_achievement_count >= 8 => 'Advanced',
+            $user_achievement_count >= 4 => 'Intermediate',
+            $user_achievement_count <= 4 => 'Beginner'
         };
 
         $badge_name = $badge;

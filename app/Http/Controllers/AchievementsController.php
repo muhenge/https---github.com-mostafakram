@@ -12,7 +12,7 @@ use App\Models\LessonUser;
 use Illuminate\Support\Facades\DB;
 use App\Models\Achievement;
 use App\Helpers\NextHelper;
-use App\Events\BadgeUnlockedEvent;
+use App\Helpers\NextBadgeHelper;
 
 class AchievementsController extends Controller
 {
@@ -44,7 +44,7 @@ class AchievementsController extends Controller
 
         $all_comments = [$comments::FIRST_COMMENT, $comments::THREE_COMMENTS, $comments::FIVE_COMMENTS, $comments::TEN_COMMENTS, $comments::TWENTY_COMMENTS];
         $all_watched = [$lesson_user::FIRST_WATCHED, $lesson_user::FIVE_WATCHED, $lesson_user::TEN__WATCHED, $lesson_user::TWENTY_WATCHED, $lesson_user::TWENTY_FIVE_WATCHED];
-        
+
         $latestLessonWatchedAchievement = Achievement::where('achievement_type', 'lesson_watched')
         ->where('user_id', $user->id)
         ->orderBy('created_at', 'desc')
@@ -58,6 +58,8 @@ class AchievementsController extends Controller
 
         $getNextElements = new NextHelper();
 
+        $nextBage = new NextBadgeHelper();
+
         $latest_comment = $getNextElements->getNextElementsFromArray($all_comments, $latestCommentWrittenAchievement->unlocked_achievement);
 
         $nextAchievements = [];
@@ -66,17 +68,20 @@ class AchievementsController extends Controller
         array_push($latest_comment, $nextAchievements);
         $latest_watch = $getNextElements->getNextElementsFromArray($all_watched, $latestLessonWatchedAchievement->unlocked_achievement);
 
-        event(new BadgeUnlockedEvent($user_achievements->count(), $user));
+        $badge = Badge::where('user_id', $user->id)->value('name');
 
-        $badge = Badge::where('user_id', $user->id)->first();
+        $badges = ['Beginner', 'Intermediate', 'Advanced', 'Master'];
 
+        $remaining_badges = $getNextElements->getNextElementsFromArray($badges, $badge);
+
+        $next_badge = $nextBage->getNextElement($badges, $badge);
 
         return response()->json([
             'unlocked_achievements' => $user_achievements,
             'next_available_achievements' => $latest_watch,
-            'current_badge' => $badge->name,
-            'next_badge' => '',
-            'remaing_to_unlock_next_badge' => 0
+            'current_badge' => $badge,
+            'next_badge' => $next_badge,
+            'remaing_to_unlock_next_badge' => $remaining_badges
         ]);
     }
 }
