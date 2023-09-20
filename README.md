@@ -9,7 +9,27 @@ Run
 ## Sample controller example
 
 ```
-$comments = new Comment();
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Events\CommentWritten;
+use App\Events\LessonWatched;
+use App\Models\Badge;
+use App\Models\User;
+use App\Models\Comment;
+use App\Models\Lesson;
+use App\Models\LessonUser;
+use Illuminate\Support\Facades\DB;
+use App\Models\Achievement;
+use App\Helpers\NextHelper;
+use App\Helpers\NextBadgeHelper;
+
+class AchievementsController extends Controller
+{
+    public function index(User $user)
+    {
+        $comments = new Comment();
         $lesson_user = new LessonUser();
 
         $comment = Comment::create(['body'=>'this the comment from the controller', 'user_id'=>$user->id]);
@@ -67,7 +87,6 @@ $comments = new Comment();
 
         $next_badge = $nextBage->getNextElement($badges, $badge);
 
-
         return response()->json([
             'unlocked_achievements' => $user_achievements,
             'next_available_achievements' => $latest_watch,
@@ -75,6 +94,8 @@ $comments = new Comment();
             'next_badge' => $next_badge,
             'remaining_to_unlock_next_badge' => $remaining_badges
         ]);
+    }
+}
 ```
 
 ### Steps
