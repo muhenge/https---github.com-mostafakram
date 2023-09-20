@@ -100,6 +100,5 @@ class AchievementsController extends Controller
 
 ### Steps
 
-* You can copy the code below `app/Listeners/AchievementUnlockedListener.php` inside the index function for testing.
 * Run the server after database configuration and migration.
 * Go to the browser and run `localhost:8000/users/{user_id}/achievements` replace `user_id` with user id created or run `php artisan tinker` and run this 	`App\Models\User::factory()->count(25)->create();` this will generate 25 users and replace the id you want between 1 to 25.
